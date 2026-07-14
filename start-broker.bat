@@ -125,7 +125,6 @@ echo Broker URL: %BROKER_URL%
 echo Press Ctrl+C to stop.
 echo.
 
-start "" powershell -NoProfile -WindowStyle Hidden -Command "Start-Sleep -Seconds 3; Start-Process '%BROKER_URL%'"
 call npm.cmd start
 
 echo.
