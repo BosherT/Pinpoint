@@ -130,6 +130,35 @@ function updateStatusPanel() {
   }
 }
 
+function diagnosticsText() {
+  const manifest = chrome.runtime.getManifest();
+  const siteUrl = connectorState.siteUrl || fields.jiraSite.value.trim() || "Not set";
+  const project = fields.project.value.trim() || "Not set";
+  const issueType = fields.issueType.value || "Not set";
+  return [
+    "Pinpoint diagnostics",
+    `Generated: ${new Date().toISOString()}`,
+    `Extension version: ${manifest.version}`,
+    `Connector URL: ${backendBaseUrl() || "Not set"}`,
+    `Broker reachable: ${connectorState.brokerReachable ? "yes" : "no"}`,
+    `Jira connected: ${connectorState.connected ? "yes" : "no"}`,
+    `Jira site: ${siteUrl}`,
+    `Auth mode: ${connectorState.authMode || "Unknown"}`,
+    `Default project: ${project}`,
+    `Default issue type: ${issueType}`,
+    `Browser: ${navigator.userAgent}`,
+    "",
+    "No OAuth tokens, session tokens, client secrets, or API keys are included."
+  ].join("\n");
+}
+
+async function copyDiagnostics() {
+  setStatus(connectorStatus, "Preparing diagnostics...");
+  await testConnector();
+  await navigator.clipboard.writeText(diagnosticsText());
+  setStatus(connectorStatus, "Diagnostics copied to clipboard.", "success");
+}
+
 function replaceSelectOptions(select, values, selectedValue) {
   select.innerHTML = "";
   values.forEach(value => {
@@ -315,6 +344,7 @@ async function searchAssignableUsers() {
 document.getElementById("testConnectorBtn").addEventListener("click", testConnector);
 document.getElementById("connectJiraBtn").addEventListener("click", () => connectJira().catch(error => setStatus(connectorStatus, error.message, "error")));
 document.getElementById("disconnectJiraBtn").addEventListener("click", () => disconnectJira().catch(error => setStatus(connectorStatus, error.message, "error")));
+document.getElementById("copyDiagnosticsBtn").addEventListener("click", () => copyDiagnostics().catch(error => setStatus(connectorStatus, error.message || "Could not copy diagnostics.", "error")));
 document.getElementById("loadIssueTypesBtn").addEventListener("click", () => loadIssueTypes().catch(error => setStatus(settingsStatus, error.message, "error")));
 document.getElementById("saveSettingsBtn").addEventListener("click", () => saveSettings().catch(error => setStatus(settingsStatus, error.message, "error")));
 document.getElementById("openCaptureBtn").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("capture.html") }));
