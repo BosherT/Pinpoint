@@ -38,6 +38,14 @@ See [Local Development](docs/LOCAL_DEVELOPMENT.md).
 
 See [Azure App Service Prep](docs/AZURE_APP_SERVICE_PREP.md) and [broker/DEPLOYMENT.md](broker/DEPLOYMENT.md).
 
+## User Setup
+
+See [Install The Pinpoint Extension](docs/INSTALL_EXTENSION.md).
+
+## Smoke Testing
+
+See [Pinpoint Smoke Test](docs/SMOKE_TEST.md).
+
 ## Updating The Project
 
 See [Update Workflow](docs/UPDATE_WORKFLOW.md).
